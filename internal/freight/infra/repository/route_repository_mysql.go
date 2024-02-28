@@ -28,8 +28,8 @@ func (r *RouteRepositoryMysql) Create(route *entity.Route) error {
 }
 
 func (r *RouteRepositoryMysql) FindByID(id string) (*entity.Route, error) {
-	sql := "SELECT id, name, distance, status, freight_price, started_at, finished_at FROM routes WHERE id = ?"
-	row := r.db.QueryRow(sql, id)
+	sqlSmt := "SELECT id, name, distance, status, freight_price, started_at, finished_at FROM routes WHERE id = ?"
+	row := r.db.QueryRow(sqlSmt, id)
 
 	var route entity.Route
 	var startedAt, finishedAt sql.NullTime
@@ -49,11 +49,11 @@ func (r *RouteRepositoryMysql) FindByID(id string) (*entity.Route, error) {
 	}
 
 	if startedAt.Valid {
-		route.StartedAt = startedAt
+		route.StartedAt = startedAt.Time
 	}
 
 	if finishedAt.Valid {
-		route.FinishedAt = finishedAt
+		route.FinishedAt = finishedAt.Time
 	}
 
 	return &route, nil
